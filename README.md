@@ -31,6 +31,25 @@ chat-evaluation/
 - Azure AI Search service
 - Chatbot API access
 
+### 0. Implement Pluggable Components (REQUIRED)
+
+Before running any of the commands below you MUST wire up your own search + answer generation logic; otherwise subsequent steps will either return empty context or produce meaningless evaluations.
+
+Implement these two files first:
+
+1. `synthetic_data_generation/search/search_service.py`
+   - Add your retrieval / search call (Azure AI Search, custom, etc.).
+   - Map your index field names and return a normalized list of docs like `{ "id": str, "content": str, "source": str, "metadata": {...} }`.
+2. `evals/answer_generation/answer_generator.py`
+   - Call your chatbot / model endpoint for each question.
+   - Return at least an `answer` string (optionally citations, raw payload, latency, etc.).
+
+Quick smoke test before proceeding:
+ - `python -c "from synthetic_data_generation.search.search_service import SearchService; print(SearchService().search('test'))"` returns docs
+ - `python -c "from evals.answer_generation.answer_generator import AnswerGenerator; print(AnswerGenerator().generate_answer('Test question')['answer'])"` returns a non-empty answer
+
+If those work, continue with Step 1.
+
 ### 1. Generate Synthetic Data
 
 ```bash
