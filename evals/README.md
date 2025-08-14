@@ -18,8 +18,6 @@ The evaluation system consists of four main components:
 
 This module is responsible for generating answers from the assistant.
 
-- **`auth_service.py`** - Handles authentication for accessing the chatbot API
-- **`chat_session_initializer.py`** - Sets up and manages chat sessions
 - **`answer_generator.py`** - Core component that queries the chatbot API with questions
 - **`answer_factory.py`** - Factory class that orchestrates the answer generation process
 

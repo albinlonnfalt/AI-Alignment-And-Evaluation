@@ -2,8 +2,6 @@
 
 Welcome to the AI Assistant Alignment & Evaluation repository. It is a "bring your own assistant" framework: you plug in your own search/retrieval stack and answer generation (chatbot) implementation, and use the provided methodology (synthetic data + automatic evaluators) to iteratively align and measure quality. The methodology and example narrative are fictional; adapt freely to your production scenario.
 
-> NOTE: If you're comparing this to a reference whitepaper / slide deck or another sample repo with similar images, the implementation & run commands here are not identical. Follow the run instructions in THIS document for this codebase. Conceptual sections reuse the same ideas & illustrative visuals, but wiring and file layout may differ.
-
 ![Solution Overview](media/img/solution_overview.png)
 
 # Chat Evaluation Repository (Implementation Details)
