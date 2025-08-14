@@ -1,0 +1,13 @@
+azure-ai-evaluation
+azure-identity
+azure-core
+pandas
+python-dotenv
+matplotlib
+seaborn
+scikit-learn
+semantic-kernel
+openai
+pydantic
+requests
+urllib3

@@ -1,0 +1,16 @@
+openai
+pydantic
+azure-search-documents
+azure-core
+azure-identity
+streamlit
+python-dotenv
+tqdm
+scikit-learn
+matplotlib
+numpy
+tiktoken
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-openai
+azure-monitor-opentelemetry-exporter
