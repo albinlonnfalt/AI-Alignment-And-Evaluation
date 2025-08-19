@@ -1,39 +1,61 @@
 # AI Assistant Alignment & Evaluation
 
-Welcome to the AI Assistant Alignment & Evaluation repository. It is a "bring your own assistant" framework: you plug in your own search/retrieval stack and answer generation (chatbot) implementation, and use the provided methodology (synthetic data + automatic evaluators) to iteratively align and measure quality. The methodology and example narrative are fictional; adapt freely to your production scenario.
+Welcome to the AI Assistant Alignment and Evaluation project! This repository is designed to accelerate your evaluation and alignment efforts for AI Assistants. It includes best practices and a user-friendly framework that you can tailor to your specific needs. This methodology has been successfully used to align AI Assistants deployed to millions of consumers. Please note that the content in this repository is entirely fictional.
+
+Note: This repository is designed to be 'bring your own assistant'. The methodology provided here serves as a wrapper around your existing assistant implementation.
+
+If you have any questions, encounter issues, or need assistance with setting up the repository, please don't hesitate to contact us.
+
+## Solution Overview
+The methodology is built on two crucial pillars: synthetic data generation and automatic evaluators. Our field experience indicates that both synthetic data and automatic evaluators are often overlooked and underutilized. This is primarily due to a lack of understanding of the underlying mathematical properties of generative AI models and the challenges associated with effectively implementing these components. This repository aims to accelerate and empower developers to harness the potential of these components by compiling key learnings from our work with companies that have launched AI solutions to millions of users.
 
 ![Solution Overview](media/img/solution_overview.png)
 
-# Chat Evaluation Repository (Implementation Details)
+## 🧰 Key Technologies
 
-This codebase contains a concrete implementation of the above concepts with two main components: **Synthetic Data Generation** and **Evaluation Pipeline** enabling automated testing and quality assessment of chat responses through synthetic Q&A pairs and multi-metric evaluation.
+- Azure OpenAI (chat, embeddings, optional evaluation models) – can be substituted with OpenAI / other providers.
+- Azure AI Evaluation SDK (orchestrates multi-metric runs; local or scaled execution).
+- Retrieval / Search (Azure AI Search or custom) – pluggable via `search_service.py`.
 
-## 📁 Repository Structure
+## 🧪 Importance of Synthetic Data
 
-```
-chat-evaluation/
-├── README.md
-├── data/
-│   ├── eval_results/          # Evaluation results from pipeline runs
-│   ├── q-a/                   # Generated question-answer pairs
-│   ├── q-a-vetted/           # Manually reviewed and approved Q&A pairs
-│   └── chatbot-answers/      # Responses from the chatbot
-├── synthetic_data_generation/ # Synthetic Q&A generation system
-└── evals/                    # Evaluation pipeline and metrics
-```
+Our field experience shows that synthetic data plays a crucial role in successfully aligning AI systems. Despite its importance, synthetic data is rarely used for AI evaluation and alignment. This underutilization is often due to a lack of understanding of its benefits and the challenges associated with its implementation.
 
-## 🚀 Quick Start
+### Importance of Sufficient Data Quantity
+
+Having a sufficient quantity of data from a representative distribution is crucial for the effective alignment and evaluation of AI systems. Current AI models are unpredictable and sensitive to small changes in prompts. To align and evaluate reliably, it is important to sample extensively from the distribution of possible questions to be able make statistically significant conclusions. Additionally, many AI systems may have an asymmetric risk profile, meaning that misalignment can lead to significant consequences. For such solutions, it is crucial to scale the annotated data to achieve statistically significant results with an acceptable risk profile.
+
+### Out of Distribution Behaviour
+
+A common pattern we have observed is that the sampled questions used for alignment and evaluation do not represent the entire distribution of questions that will be asked to the AI assistant. Often, the dataset exclusively contains the most common topics, lengths, and phrasings. The image below illustrates the sampling cut-off from the tails of the distribution. (Please note that the image is purely illustrative and not representative of a real distribution.)
+
+![Sampling Cutoff Illustration](media/img/sampling_from_distribution.png)
+
+The behavior of AI systems for questions that fall outside the sampling distribution used for alignment and evaluation often results in unpredictable outcomes. Therefore, it is crucial to obtain samples from as large a portion of the distribution as possible. Synthetic data is an excellent tool for achieving a dataset that covers a broader range of possible questions, as it can be scaled indefinitely and eliminates human biases.
+
+![Bad vs Good Sampling](media/img/bad_vs_good_data_sampling.png)
+
+## 🤖 Importance of Automatic Evaluators
+
+### Iterative Alignment
+
+To rapidly iterate on prompts, configurations, or fine-tuned models, it is crucial to have a swift evaluation method to determine if the system has improved. Automatic evaluators can provide near-instant feedback, eliminating the need to rely on human domain experts for daily development tasks.
+
+### Scale the Evaluation
+
+To effectively cover a significant dataset, it is important to scale the evaluations. Scaling evaluations to a sufficient number of data points often requires automated evaluators that can either operate independently or assist in reducing the number of data points that need to be reviewed by a human.
+
+## 🚀 Get Started
 
 ### Prerequisites
 
 - Python 3.8+
 - Azure OpenAI access
-- Azure AI Search service
 - Chatbot API access
 
 ### 0. Implement Pluggable Components (REQUIRED)
 
-Before running any of the commands below you MUST wire up your own search + answer generation logic; otherwise subsequent steps will either return empty context or produce meaningless evaluations.
+Before running any of the commands below you MUST wire up your own search + answer generation logic.
 
 Implement these two files first:
 
@@ -75,58 +97,11 @@ pip install -r requirements.txt
 python evaluation_pipeline.py
 ```
 
-## � Solution Overview
-
-Two pillars underpin effective alignment:
-1. Synthetic Data Generation (broad & diverse sampling of potential user queries)
-2. Automatic Evaluators (scalable, repeatable measurement loop)
-
-Teams often underutilize both because of perceived complexity or unclear ROI. This framework operationalizes them so you can focus on refining model behavior.
-
-## 🧰 Key Technologies
-
-- Azure OpenAI (chat, embeddings, optional evaluation models) – can be substituted with OpenAI / other providers.
-- Azure AI Evaluation SDK (orchestrates multi-metric runs; local or scaled execution).
-- Retrieval / Search (Azure AI Search or custom) – pluggable via `search_service.py`.
-
-## 🧪 Importance of Synthetic Data
-
-High-quality alignment requires breadth and depth. Human-crafted test sets typically cluster around common phrasings and miss edge cases. Synthetic generation lets you:
-- Expand coverage (rare intents, long-tail phrasings, adversarial variants)
-- Reduce SME hours spent crafting examples
-- Quantify improvements statistically (enough samples for meaningful deltas)
-
-### Sufficient Data Quantity
-Models are sensitive to small prompt/config changes. To assert improvements with confidence, you need enough independent samples across the operational distribution.
-
-### Out-of-Distribution Behaviour
-Real traffic contains tail patterns absent from naive samples. Synthetic generation purposefully explores those tails.
-
-![Sampling Cutoff Illustration](media/img/sampling_from_distribution.png)
-
-Broader sampling reduces surprise failure modes in production.
-
-![Bad vs Good Sampling](media/img/bad_vs_good_data_sampling.png)
-
-## 🤖 Importance of Automatic Evaluators
-
-### Iterative Alignment
-Fast model/prompt iteration demands near-immediate feedback. Automatic evaluators replace most day-to-day SME review with machine judgments plus targeted spot checks.
-
-### Scaling Evaluation
-Manual-only evaluation does not scale with dataset size. Automated metrics (correctness, citation quality, completeness, etc.) allow continuous regression detection and trend tracking.
-
-## �🔧 Components
+## 🔧 Components
 
 ### Synthetic Data Generation
 
 The synthetic data generation system creates diverse, question-answer pairs for evaluation purposes.
-
-**Why Synthetic Data?**
-- **SME Efficiency**: Reduces the time Subject Matter Experts spend creating test cases
-- **Comprehensive Coverage**: Generates questions covering edge cases and scenarios humans might miss
-- **Scale**: Creates large datasets needed for robust evaluation
-- **Diversity**: Ensures representation across different question types, complexity levels, and domains
 
 **Components:**
 - `generators/` - Question generation algorithms
