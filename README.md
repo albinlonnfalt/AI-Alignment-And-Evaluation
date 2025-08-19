@@ -4,8 +4,6 @@ Welcome to the AI Assistant Alignment and Evaluation project! This repository is
 
 Note: This repository is designed to be 'bring your own assistant'. The methodology provided here serves as a wrapper around your existing assistant implementation.
 
-If you have any questions, encounter issues, or need assistance with setting up the repository, please don't hesitate to contact us.
-
 ## Solution Overview
 The methodology is built on two crucial pillars: synthetic data generation and automatic evaluators. Our field experience indicates that both synthetic data and automatic evaluators are often overlooked and underutilized. This is primarily due to a lack of understanding of the underlying mathematical properties of generative AI models and the challenges associated with effectively implementing these components. This repository aims to accelerate and empower developers to harness the potential of these components by compiling key learnings from our work with companies that have launched AI solutions to millions of users.
 
